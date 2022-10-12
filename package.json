@@ -1,7 +1,34 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "description": "Validate links from a markdown file",
+  "main": "./src/index.js",
+  "author": "Stephanie Campos",
   "engines": {
     "node": ">=16.x"
+  },
+  "keywords": [
+    "links",
+    "markdown",
+    "broken links"
+  ],
+  "bin": {
+    "mdlinks": "./src/index.js"
+  },
+  "scripts": {
+    "test": "jest --verbose --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michellecamposc/SCL021-md-links"
+  },
+  "dependencies": {
+    "@laboratoria/curriculum-parser": "github:Laboratoria/course-parser",
+    "chalk": "^5.1.0",
+    "colors": "^1.4.0",
+    "eslint": "^8.3.0",
+    "jest": "^27.0.1",
+    "markdown-link-extractor": "^3.1.0",
+    "yargs": "^17.6.0"
   }
 }

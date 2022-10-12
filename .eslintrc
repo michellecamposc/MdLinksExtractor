@@ -4,5 +4,11 @@
   },
   "parserOptions": {
     "ecmaVersion": 8
+    //"sourceType": "module"
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "no-console": "warn",
+    "import/extensions": 0
   }
 }
