@@ -20,6 +20,9 @@ const directoryOrFile = () => {
   fileSystem.stat(absolutePath, (err, stats) => {
     const file = stats.isFile(absolutePath);
     const directory = stats.isDirectory(absolutePath);
+    if (err) {
+      reject("Error".red, err);
+    }
     if (file) {
       return console.log("Esta ruta es un archivo".yellow + " " + file);
     } else if (directory) {
@@ -43,27 +46,41 @@ const readDirectoryFiles = () => {
     const arrFiles = [];
     fileSystem.readdir(userPath, "utf8", (err, files) => {
       if (err) {
-        reject(err);
+        reject("Error".red, err);
       }
       files.forEach((file) => {
         if (path.extname(file) === ".md") {
-          console.log("Archivos .md encontrado".rainbow, file);
-          arrFiles.push(files);
+          console.log("Archivo Markdown  encontrado".rainbow, file);
+          arrFiles.push(file);
         }
       });
-      resolve("Archivos .md", arrFiles);
+      resolve(arrFiles);
     });
   });
 };
 readDirectoryFiles();
 
-//Leer los archivos
-const readFiles = () => {
-  fs.readFile(absolutePath, "utf-8", (err, data) => {
-    if (err) {
-      console.log("error: ", err);
-    } else {
-      console.log(data);
-    }
+//Extraer links markdown de los archivos
+const getLinks = () => {
+  return new Promise((resolve, reject) => {
+    const arrLink = [];
+    const regexLink = /\[(\w.+)\]\((https):\/\/[^ "]\S+\)/g;
+    fileSystem.readFile(absolutePath, "utf-8", (err, data) => {
+      if (err) {
+        reject("Error".red, err);
+      } else if (data.match(regexLink) === null) {
+        reject("No se encontraron links en el documento".red);
+      } else if (data) {
+        data.match(regexLink).forEach((link) => {
+          arrLink.push(link);
+          console.log("Estos son los links".rainbow, link);
+        });
+        resolve("Estos son los links".rainbow, arrLink);
+      }
+    });
   });
 };
+console.log(getLinks);
+getLinks;
+
+//mdlinks src
