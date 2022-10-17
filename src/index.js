@@ -4,6 +4,7 @@
 const fileSystem = require("fs");
 const path = require("path");
 const colors = require("colors");
+//const fetch = require("node-fetch");
 
 //Lector de las rutas
 const userPath = process.argv[2]; // Muestra la ruta ingresada por el usuario
@@ -40,11 +41,11 @@ const fileExtension = () => {
 };
 console.log("La extensión del archivo es md".yellow, fileExtension());
 
-//Si la ruta es un directorio leer y mostrar sus archivos
-const readDirectoryFiles = () => {
+/*Si la ruta es un directorio leer y mostrar sus archivos
+const readDirectoryFiles = (absolutePath) => {
   return new Promise((resolve, reject) => {
     const arrFiles = [];
-    fileSystem.readdir(userPath, "utf8", (err, files) => {
+    fileSystem.readdir(absolutePath, "utf8", (err, files) => {
       if (err) {
         reject("Error".red, err);
       }
@@ -57,11 +58,10 @@ const readDirectoryFiles = () => {
       resolve(arrFiles);
     });
   });
-};
-readDirectoryFiles();
+};*/
 
 //Extraer links markdown de los archivos
-const getLinks = () => {
+const getLinks = (absolutePath) => {
   return new Promise((resolve, reject) => {
     const arrLink = [];
     const regexLink = /\[(\w.+)\]\((https):\/\/[^ "]\S+\)/g;
@@ -73,14 +73,48 @@ const getLinks = () => {
       } else if (data) {
         data.match(regexLink).forEach((link) => {
           arrLink.push(link);
-          console.log("Estos son los links".rainbow, link);
+          console.log("Links encontrados".rainbow, link);
         });
-        resolve("Estos son los links".rainbow, arrLink);
+        resolve(arrLink);
       }
     });
   });
 };
-console.log(getLinks);
-getLinks;
+getLinks(absolutePath)
+  .then((link) => {
+    console.log(link);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+//Estado de los links
+const getLinkStatus = ({ href, text, file }) => {
+  const resultFetch = fetch(href)
+    .then((response) => {
+      const status = response.status;
+      const linkStatusObject = {
+        Href: href,
+        Txt: text,
+        File: file,
+        Status: status,
+        Ok: status >= 200 && status <= 399 ? "ok" : "fail",
+      };
+      return linkStatusObject;
+    })
+    .catch((err) => {
+      const linkStatusObjectErr = {
+        Href: href,
+        Txt: text,
+        File: file,
+        Status: "Error con la petición fetch " + err,
+        Ok: "fail",
+      };
+      return linkStatusObjectErr;
+    });
+  return resultFetch;
+};
+getLinkStatus;
 
 //mdlinks src
+//mdlinks src/test.md
