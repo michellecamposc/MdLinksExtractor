@@ -4,7 +4,7 @@
 const fileSystem = require("fs");
 const path = require("path");
 const colors = require("colors");
-//const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 
 //Lector de las rutas
 const userPath = process.argv[2]; // Muestra la ruta ingresada por el usuario
@@ -16,7 +16,7 @@ const absolutePath =
   path.isAbsolute(userPath) === true ? userPath : path.resolve(userPath);
 console.log("Ruta relativa transformada".yellow, absolutePath);
 
-//Verificar si la ruta es un directorio o archivo
+//Verifica si la ruta es un directorio o archivo
 const directoryOrFile = () => {
   fileSystem.stat(absolutePath, (err, stats) => {
     const file = stats.isFile(absolutePath);
@@ -41,7 +41,7 @@ const fileExtension = () => {
 };
 console.log("La extensión del archivo es md".yellow, fileExtension());
 
-/*Si la ruta es un directorio leer y mostrar sus archivos
+//Si la ruta es un directorio leer y mostrar sus archivos
 const readDirectoryFiles = (absolutePath) => {
   return new Promise((resolve, reject) => {
     const arrFiles = [];
@@ -58,13 +58,15 @@ const readDirectoryFiles = (absolutePath) => {
       resolve(arrFiles);
     });
   });
-};*/
+};
+readDirectoryFiles;
 
-//Extraer links markdown de los archivos
+//Extraer links Markdown de los archivos
 const getLinks = (absolutePath) => {
   return new Promise((resolve, reject) => {
     const arrLink = [];
-    const regexLink = /\[(\w.+)\]\((https):\/\/[^ "]\S+\)/g;
+    const regexLink =
+      /(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9(!@:%_\+.~#?&\/\/=]*)/gi;
     fileSystem.readFile(absolutePath, "utf-8", (err, data) => {
       if (err) {
         reject("Error".red, err);
@@ -80,41 +82,46 @@ const getLinks = (absolutePath) => {
     });
   });
 };
-getLinks(absolutePath)
-  .then((link) => {
+
+//Función para validar los links
+const validateLinks = (links) => {
+  const arrStatus = links.map((link) => {
     console.log(link);
+    return fetch(link)
+      .then((response) => {
+        const status = response.status === 200 ? "Ok" : "Fail";
+        const data = {
+          File: absolutePath,
+          Href: response.url,
+          Status: status,
+        };
+        return data;
+      })
+      .catch((err) => {
+        const data = {
+          Href: response.url,
+          Status: "Error con la petición fetch" + err,
+          File: absolutePath,
+          Message: "Fail",
+        };
+        return data;
+      });
+  });
+  return Promise.all(arrStatus);
+};
+
+//Función MDLinks
+
+getLinks(absolutePath)
+  .then((links) => {
+    console.log(links);
+    //const validLinks = validateLinks(link);
+    validateLinks(links).then(console.log);
+    //return Promise.allSettled(validLinks);
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Error", err);
   });
-
-//Estado de los links
-const getLinkStatus = ({ href, text, file }) => {
-  const resultFetch = fetch(href)
-    .then((response) => {
-      const status = response.status;
-      const linkStatusObject = {
-        Href: href,
-        Txt: text,
-        File: file,
-        Status: status,
-        Ok: status >= 200 && status <= 399 ? "ok" : "fail",
-      };
-      return linkStatusObject;
-    })
-    .catch((err) => {
-      const linkStatusObjectErr = {
-        Href: href,
-        Txt: text,
-        File: file,
-        Status: "Error con la petición fetch " + err,
-        Ok: "fail",
-      };
-      return linkStatusObjectErr;
-    });
-  return resultFetch;
-};
-getLinkStatus;
 
 //mdlinks src
 //mdlinks src/test.md

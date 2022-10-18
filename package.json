@@ -29,7 +29,7 @@
     "eslint": "^8.3.0",
     "jest": "^27.0.1",
     "markdown-link-extractor": "^3.1.0",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^2.6.7",
     "yargs": "^17.6.0"
   }
 }
