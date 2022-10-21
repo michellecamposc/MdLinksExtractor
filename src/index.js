@@ -8,13 +8,15 @@ const fetch = require("node-fetch");
 
 //Lector de las rutas
 const userPath = process.argv[2]; // Muestra la ruta ingresada por el usuario
-const options = process.argv[3];
-console.log("Esta esta la ruta que dió el usuario".blue, userPath);
+console.log("Ruta que ingresócle el usuario".blue, userPath);
+
+//La ruta existe
+const pathExists = fileSystem.existsSync(userPath);
+console.log("La ruta ingresada existe?".green, pathExists);
 
 //Convierte una ruta relativa a absoluta
-const absolutePath =
-  path.isAbsolute(userPath) === true ? userPath : path.resolve(userPath);
-console.log("Ruta relativa transformada".yellow, absolutePath);
+const absolutePath = path.isAbsolute(userPath) === true ? userPath : path.resolve(userPath);
+console.log("Ruta relativa transformada a absoluta".magenta, absolutePath);
 
 //Verifica si la ruta es un directorio o archivo
 const directoryOrFile = () => {
@@ -33,13 +35,12 @@ const directoryOrFile = () => {
     }
   });
 };
-directoryOrFile();
 
 //Extensión del archivo
 const fileExtension = () => {
   return path.extname(absolutePath) === ".md";
 };
-console.log("La extensión del archivo es md".yellow, fileExtension());
+console.log("La extensión del archivo es Markdown?".yellow, fileExtension());
 
 //Si la ruta es un directorio leer y mostrar sus archivos
 const readDirectoryFiles = (absolutePath) => {
@@ -51,7 +52,7 @@ const readDirectoryFiles = (absolutePath) => {
       }
       files.forEach((file) => {
         if (path.extname(file) === ".md") {
-          console.log("Archivo Markdown  encontrado".rainbow, file);
+          console.log("Archivo Markdown encontrado".rainbow, file);
           arrFiles.push(file);
         }
       });
@@ -59,14 +60,12 @@ const readDirectoryFiles = (absolutePath) => {
     });
   });
 };
-readDirectoryFiles;
 
 //Extraer links Markdown de los archivos
 const getLinks = (absolutePath) => {
   return new Promise((resolve, reject) => {
     const arrLink = [];
-    const regexLink =
-      /(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9(!@:%_\+.~#?&\/\/=]*)/gi;
+    const regexLink = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm;
     fileSystem.readFile(absolutePath, "utf-8", (err, data) => {
       if (err) {
         reject("Error".red, err);
@@ -75,7 +74,7 @@ const getLinks = (absolutePath) => {
       } else if (data) {
         data.match(regexLink).forEach((link) => {
           arrLink.push(link);
-          console.log("Links encontrados".rainbow, link);
+          //console.log("Links encontrados".rainbow, link);
         });
         resolve(arrLink);
       }
@@ -86,7 +85,7 @@ const getLinks = (absolutePath) => {
 //Función para validar los links
 const validateLinks = (links) => {
   const arrStatus = links.map((link) => {
-    console.log(link);
+    //console.log(link);
     return fetch(link)
       .then((response) => {
         const status = response.status === 200 ? "Ok" : "Fail";
@@ -98,11 +97,11 @@ const validateLinks = (links) => {
         return data;
       })
       .catch((err) => {
+        const status = response.status === 200 ? "Ok" : "Fail";
         const data = {
           Href: response.url,
-          Status: "Error con la petición fetch" + err,
+          Status: "Error con la petición fetch" + status, err,
           File: absolutePath,
-          Message: "Fail",
         };
         return data;
       });
@@ -110,18 +109,16 @@ const validateLinks = (links) => {
   return Promise.all(arrStatus);
 };
 
-//Función MDLinks
 
 getLinks(absolutePath)
   .then((links) => {
     console.log(links);
-    //const validLinks = validateLinks(link);
+
     validateLinks(links).then(console.log);
-    //return Promise.allSettled(validLinks);
+
   })
   .catch((err) => {
     console.log("Error", err);
   });
 
-//mdlinks src
-//mdlinks src/test.md
+module.exports = { pathExists, absolutePath, directoryOrFile, fileExtension, readDirectoryFiles, getLinks, validateLinks };
