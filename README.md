@@ -17,18 +17,8 @@ A continuación se muestra el diagrama de flujo creado para desarrollar dicha li
 <img src="src/images/flowchart.png" alt="version-final" width="510px" height=750px/>
 
 
-## Instalación
-
-Se puede instalar por npm:
-
-## Guía de uso
-Se logra ejecutar la librería por medio de la terminal:
-
-(nombre del path) <path-to-file> [options]
-
-Las rutas ingresadas pueden ser relativa o absoluta y las opciones son: --stats, --validate, o usar las dos juntas --stats --validate.
-
-
-
+## Resultado 
+La forma en como se muestra el análisis de la ruta entregada.
+<img src="src/images/resultado.png" alt="version-final" width="600px" height=370px/>
 
 

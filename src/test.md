@@ -11,4 +11,5 @@ https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Ar
 https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
 https://es.wikipedia.org/wiki/Markdown
 https://nodejs.org/
+https://developer.mozilla.org/es/docs/Learn/JavaScript/Building_blocks/Functions
 

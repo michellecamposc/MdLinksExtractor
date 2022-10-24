@@ -13,11 +13,11 @@ const mdLinks = (absolutePath, options) =>
         const validLinks = api.getLinks(link);
         arrLinks = arrLinks.concat(validateLinks(validLinks))
       })
-      if (!(options.validate)) {
+      if (options.validate === true) {
         resolve(arrLinks);
       } else {
-        const statusLink = validateLinks(arrLinks);
-        resolve(statusLink);
+        const linkStatusArr = validateLinks(arrLinks);
+        resolve(linkStatusArr);
       }
     }
   });
@@ -25,4 +25,4 @@ const mdLinks = (absolutePath, options) =>
 module.exports = { mdLinks };
 
 //mdlinks src/test.md
-//mdlinks src/md-links.jss
+//mdlinks src/cli.js

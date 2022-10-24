@@ -25,8 +25,8 @@ const options = { validate, stats }
 const validate = args.includes("--validate");
 const stats = args.includes("--stats");
 
-const status = linkStatus(array);
-const broken = brokenLinks(array);
+const status = linkStatus();
+const broken = brokenLinks();
 
 if (args.length === 1) {
   mdLinks(userPath, { validate: false })
@@ -35,25 +35,25 @@ if (args.length === 1) {
       console.log("Error".red, err);
     });
 } else {
-  //Validate & Stats obtenemos estadisticas generales
+  //Validate & Stats obtenemos estadísticas generales
   if (validate && stats) {
     mdLinks(userPath, { validate: true })
       .then(res => {
-        console.table(colors.rainbow, status.rainbow, res)
-        console.table(colors.rainbow, broken.rainbow, res)
+        console.log(status.rainbow, res)
+        console.log(broken.red, res)
       })
       .catch((err) => {
         console.log("Error".red, err);
       });
     //En el caso de validate
-  } else if (validate) {
+  } else if (options.validate) {
     mdLinks(userPath, { validate: true })
-      .then(res => console.log(res.rainbow))
+      .then(res => console.log(broken.red, status.rainbow, res))
       .catch((err) => console.log("Error".red, err))
     //En el caso de stats
-  } else if (stats) {
+  } else if (options.stats) {
     mdLinks(userPath, { validate: true })
-      .then(res => console.table(colors.rainbow, status.rainbow, res))
+      .then(res => console.table(broken.red, status.rainbow, res))
       .catch((err) => console.log("Error".red, err))
   }
 }

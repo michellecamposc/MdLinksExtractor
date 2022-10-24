@@ -8,7 +8,7 @@ const fetch = require("node-fetch");
 
 //Lector de las rutas
 const userPath = process.argv[2]; // Muestra la ruta ingresada por el usuario
-console.log("Ruta que ingresócle el usuario".blue, userPath);
+console.log("Ruta que ingresó el usuario".blue, userPath);
 
 //La ruta existe
 const pathExists = fileSystem.existsSync(userPath);
@@ -74,7 +74,6 @@ const getLinks = (absolutePath) => {
       } else if (data) {
         data.match(regexLink).forEach((link) => {
           arrLink.push(link);
-          //console.log("Links encontrados".rainbow, link);
         });
         resolve(arrLink);
       }
@@ -85,7 +84,6 @@ const getLinks = (absolutePath) => {
 //Función para validar los links
 const validateLinks = (links) => {
   const arrStatus = links.map((link) => {
-    //console.log(link);
     return fetch(link)
       .then((response) => {
         const status = response.status === 200 ? "Ok" : "Fail";
