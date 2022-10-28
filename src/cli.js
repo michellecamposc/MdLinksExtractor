@@ -27,7 +27,6 @@ const stats = args.includes("--stats");
 
 const status = linkStatus();
 const broken = brokenLinks();
-
 if (args.length === 1) {
   mdLinks(userPath, { validate: false })
     .then(res => console.log(res))
@@ -39,8 +38,7 @@ if (args.length === 1) {
   if (validate && stats) {
     mdLinks(userPath, { validate: true })
       .then(res => {
-        console.log(status.rainbow, res)
-        console.log(broken.red, res)
+        console.log(status.rainbow, broken.red, res)
       })
       .catch((err) => {
         console.log("Error".red, err);
@@ -48,7 +46,7 @@ if (args.length === 1) {
     //En el caso de validate
   } else if (options.validate) {
     mdLinks(userPath, { validate: true })
-      .then(res => console.log(broken.red, status.rainbow, res))
+      .then(res => console.log(status.rainbow, res))
       .catch((err) => console.log("Error".red, err))
     //En el caso de stats
   } else if (options.stats) {
@@ -57,7 +55,6 @@ if (args.length === 1) {
       .catch((err) => console.log("Error".red, err))
   }
 }
-
 
 module.exports = { linkStatus, brokenLinks };
 

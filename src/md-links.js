@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const api = require("./src/index.js");
-//const api = { pathExists, absolutePath, directoryOrFile, fileExtension, readDirectoryFiles, getLinks, validateLinks } = require("./src/index.js");
 
 const mdLinks = (absolutePath, options) =>
   new Promise((resolve, rejected) => {

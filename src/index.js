@@ -81,6 +81,18 @@ const getLinks = (absolutePath) => {
   });
 };
 
+getLinks(absolutePath)
+  .then((links) => {
+    console.log(links);
+
+    validateLinks(links).then(console.log);
+
+  })
+  .catch((err) => {
+    console.log("Error", err);
+  });
+
+
 //Función para validar los links
 const validateLinks = (links) => {
   const arrStatus = links.map((link) => {
@@ -105,18 +117,8 @@ const validateLinks = (links) => {
       });
   });
   return Promise.all(arrStatus);
+  //Promise.allSettled
 };
 
-
-getLinks(absolutePath)
-  .then((links) => {
-    console.log(links);
-
-    validateLinks(links).then(console.log);
-
-  })
-  .catch((err) => {
-    console.log("Error", err);
-  });
 
 module.exports = { pathExists, absolutePath, directoryOrFile, fileExtension, readDirectoryFiles, getLinks, validateLinks };

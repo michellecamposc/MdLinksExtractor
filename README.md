@@ -14,11 +14,29 @@ Dentro de una comunidad de código abierto, nos han propuesto crear una herramie
 ## Diagrama de flujo
 A continuación se muestra el diagrama de flujo creado para desarrollar dicha librería:
 
-<img src="src/images/flowchart.png" alt="version-final" width="510px" height=750px/>
+<img src="src/images/flowchart.png" alt="flow-chart" width="510px" height=750px/>
+
+## Información mostrada al usar la librería
+
+- El usuario deberá ingresar la ruta a leer, si no es válida se mostrará un mensaje de error. Si la ruta proporcionada es absoluta continuará la lectura de los links, de no ser así se transformará la ruta relativa a absoluta.
+
+- Luego se confirmará si existen archivos Markdown en la ruta entregada para ser leídos posteriormente.
+<img src="src/images/userPath.png" alt="user-path" width="600px" height=100px/>
+
+### Lectura de cada link que se encuentre en el archivo Markdown
+
+- Buscará cada link que se encuentre en el archivo Markdown y proporcionará una lista de estos.
+<img src="src/images/arrLinks.png" alt="all-links" width="600px" height=200px/>
 
 
-## Resultado 
-La forma en como se muestra el análisis de la ruta entregada.
-<img src="src/images/resultado.png" alt="version-final" width="600px" height=370px/>
+### Valida cada link encontrado para mostrar datos específicos.
+
+- En caso de que el link no esté roto mostrará un estado de "Ok"
+<img src="src/images/statusOk.png" alt="status-ok" width="600px" height=200px/>
+
+- En caso de que el link esté roto mostrará un estado de "Fail"
+<img src="src/images/statusFail.png" alt="status-ok" width="600px" height=130px/>
+
+
 
 
